@@ -2,16 +2,19 @@ import express from 'express'
 import cors from 'cors'
 import { config } from './config/config'
 import { connectDB } from './databaseConnection/mongoConnection'
+import { requestLogger } from './middleware/logger'
 
-import { setupCronJob } from './services/cronService';
+import { setupCronJob } from './services/cronService'
 
 import authRoutes from './routes/authRoutes'
-import todoRoutes from './routes/todoRoutes';
+import todoRoutes from './routes/todoRoutes'
 
 const app = express()
 
+// Middleware
 app.use(cors())
 app.use(express.json())
+app.use(requestLogger)
 
 // Routes
 app.use('/api/auth', authRoutes)
