@@ -1,4 +1,4 @@
-import { body, query, param } from 'express-validator'
+import { body, query, param } from 'express-validator';
 
 export const createTodoValidation = [
   body('title')
@@ -14,7 +14,7 @@ export const createTodoValidation = [
     .optional()
     .isISO8601()
     .withMessage('Due date must be a valid date')
-]
+];
 
 export const updateTodoValidation = [
   param('id')
@@ -36,7 +36,7 @@ export const updateTodoValidation = [
     .optional()
     .isBoolean()
     .withMessage('Completed must be a boolean value')
-]
+];
 
 export const getTodosValidation = [
   query('completed')
@@ -62,11 +62,19 @@ export const getTodosValidation = [
   query('sortOrder')
     .optional()
     .isIn(['asc', 'desc'])
-    .withMessage('Sort order must be either asc or desc')
-]
+    .withMessage('Sort order must be either asc or desc'),
+  query('skip')
+    .optional()
+    .isInt({ min: 0 })
+    .withMessage('Skip must be a non-negative integer'),
+  query('limit')
+    .optional()
+    .isInt({ min: 1, max: 100 })
+    .withMessage('Limit must be between 1 and 100')
+];
 
 export const todoIdValidation = [
   param('id')
     .isMongoId()
     .withMessage('Invalid todo ID')
-] 
+]; 
