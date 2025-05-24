@@ -3,6 +3,8 @@ import cors from 'cors'
 import { config } from './config/config'
 import { connectDB } from './databaseConnection/mongoConnection'
 
+import { setupCronJob } from './services/cronService';
+
 import authRoutes from './routes/authRoutes'
 import todoRoutes from './routes/todoRoutes';
 
@@ -23,6 +25,9 @@ app.listen(config.port, async () => {
 
     // Connect to MongoDB
     await connectDB()
+
+    // Setup CRON job
+    setupCronJob()
 
     console.log('=================================')
 })
