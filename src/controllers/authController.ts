@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
-import bcrypt from 'bcryptjs'
 import jwt, { SignOptions } from 'jsonwebtoken'
-import { User, IUser } from '../models/User'
+import { User } from '../models/User'
 import { config } from '../config/config'
 
 export const signup = async (req: Request, res: Response): Promise<void> => {

@@ -89,6 +89,7 @@ The API includes a CRON job that runs daily at midnight to automatically mark ex
 
 - `npm run dev` - Start development server with hot-reload
 - `npm run build` - Build TypeScript code
+- `npm run lint` - Run ESLint
 
 ## License
 
