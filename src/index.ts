@@ -4,18 +4,16 @@ import { config } from './config/config'
 import { connectDB } from './databaseConnection/mongoConnection'
 
 import authRoutes from './routes/authRoutes'
+import todoRoutes from './routes/todoRoutes';
 
 const app = express()
 
 app.use(cors())
 app.use(express.json())
 
-app.get('/', (req, res) => {
-    res.send('Hello World')
-})
-
 // Routes
 app.use('/api/auth', authRoutes)
+app.use('/api/todos', todoRoutes)
 
 // Start server
 app.listen(config.port, async () => {
