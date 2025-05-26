@@ -1,4 +1,5 @@
 import express from 'express'
+import { auth } from '../middleware/auth'
 import {
   createTodo,
   getTodos,
@@ -15,6 +16,9 @@ import {
 import { validateRequest } from '../middleware/validators/validateRequest'
 
 const router = express.Router()
+
+// Apply auth middleware to all routes
+router.use(auth)
 
 /**
  * @swagger
