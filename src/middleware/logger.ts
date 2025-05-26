@@ -4,9 +4,10 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction) =
   const start = Date.now()
   const { method, originalUrl, ip } = req
   const userAgent = req.get('user-agent') || 'Unknown'
+  const pid = process.pid
 
   // Log request
-  console.log(`\n[${new Date().toISOString()}] ${method} ${originalUrl}`)
+  console.log(`\n[${new Date().toISOString()}] [Worker ${pid}] ${method} ${originalUrl}`)
   console.log(`IP: ${ip}`)
   console.log(`User-Agent: ${userAgent}`)
   
