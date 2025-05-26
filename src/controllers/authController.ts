@@ -23,7 +23,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     await user.save()
 
     // Generate token
-    const options: SignOptions = { expiresIn: config.jwtExpiresIn as any }
+    const options: SignOptions = { expiresIn: config.jwtExpiresIn }
     const token = jwt.sign({ _id: user._id.toString() }, config.jwtSecret, options)
 
     res.status(201).json({
@@ -74,7 +74,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Generate token
-    const options: SignOptions = { expiresIn: config.jwtExpiresIn as any }
+    const options: SignOptions = { expiresIn: config.jwtExpiresIn }
     const token = jwt.sign({ _id: user._id.toString() }, config.jwtSecret, options)
 
     res.json({

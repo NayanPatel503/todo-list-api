@@ -1,8 +1,9 @@
 import { Request, Response } from 'express'
 import { Todo } from '../models/Todo'
+import { IUser } from '../models/User'
 
 interface AuthRequest extends Request {
-  user?: any
+  user?: IUser
 }
 
 interface TodoFilters {
@@ -16,8 +17,33 @@ interface TodoFilters {
   limit?: number
 }
 
+interface TodoFilter {
+  user: string
+  completed?: boolean
+  dueDate?: {
+    $gte?: Date
+    $lte?: Date
+  }
+  $or?: Array<{
+    title?: { $regex: string; $options: string }
+    description?: { $regex: string; $options: string }
+  }>
+}
+
+interface SortOptions {
+  [key: string]: 1 | -1
+}
+
 export const createTodo = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        message: 'User not authenticated',
+        data: {}
+      })
+      return
+    }
     const todo = new Todo({
       ...req.body,
       user: req.user._id,
@@ -39,6 +65,14 @@ export const createTodo = async (req: AuthRequest, res: Response): Promise<void>
 
 export const getTodos = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        message: 'User not authenticated',
+        data: {}
+      })
+      return
+    }
     const {
       completed,
       startDate,
@@ -51,7 +85,7 @@ export const getTodos = async (req: AuthRequest, res: Response): Promise<void> =
     }: TodoFilters = req.query
 
     // Build filter object
-    const filter: any = { user: req.user._id }
+    const filter: TodoFilter = { user: req.user._id.toString() }
 
     // Filter by completion status
     if (completed !== undefined) {
@@ -78,7 +112,7 @@ export const getTodos = async (req: AuthRequest, res: Response): Promise<void> =
     }
 
     // Build sort object
-    const sort: any = {}
+    const sort: SortOptions = {}
     sort[sortBy as string] = sortOrder === 'asc' ? 1 : -1
 
     // Get total count of todos matching the filter
@@ -131,6 +165,14 @@ export const getTodos = async (req: AuthRequest, res: Response): Promise<void> =
 
 export const getTodo = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        message: 'User not authenticated',
+        data: {}
+      })
+      return
+    }
     const todo = await Todo.findOne({
       _id: req.params.id,
       user: req.user._id,
@@ -160,6 +202,14 @@ export const getTodo = async (req: AuthRequest, res: Response): Promise<void> =>
 }
 
 export const updateTodo = async (req: AuthRequest, res: Response): Promise<void> => {
+  if (!req.user) {
+    res.status(401).json({
+      success: false,
+      message: 'User not authenticated',
+      data: {}
+    })
+    return
+  }
   const updates = Object.keys(req.body)
   const allowedUpdates = ['title', 'description', 'dueDate', 'completed']
   const isValidOperation = updates.every((update) =>
@@ -191,7 +241,7 @@ export const updateTodo = async (req: AuthRequest, res: Response): Promise<void>
     }
 
     updates.forEach((update) => {
-      (todo as any)[update] = req.body[update]
+      (todo as unknown as Record<string, unknown>)[update] = req.body[update]
     })
     await todo.save()
     res.json({
@@ -210,6 +260,14 @@ export const updateTodo = async (req: AuthRequest, res: Response): Promise<void>
 
 export const deleteTodo = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
+    if (!req.user) {
+      res.status(401).json({
+        success: false,
+        message: 'User not authenticated',
+        data: {}
+      })
+      return
+    }
     const todo = await Todo.findOneAndDelete({
       _id: req.params.id,
       user: req.user._id,

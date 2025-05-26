@@ -4,7 +4,7 @@ import { config } from '../config/config'
 export const connectDB = async (): Promise<void> => {
   try {
     const conn = await mongoose.connect(config.mongodbUri)
-    // console.log(`MongoDB Connected: ${conn.connection.host}`)
+    console.log(`MongoDB Connected: ${conn.connection.host}`)
 
     // Return a promise that resolves when the connection is ready
     return new Promise((resolve, reject) => {
