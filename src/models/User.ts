@@ -1,11 +1,44 @@
 import mongoose, { Document, Schema } from 'mongoose'
 import bcrypt from 'bcryptjs'
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     User:
+ *       type: object
+ *       required:
+ *         - email
+ *         - password
+ *       properties:
+ *         _id:
+ *           type: string
+ *           description: The auto-generated id of the user
+ *         email:
+ *           type: string
+ *           format: email
+ *           description: The email of the user
+ *         password:
+ *           type: string
+ *           format: password
+ *           description: The password of the user
+ *         createdAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date the user was created
+ *         updatedAt:
+ *           type: string
+ *           format: date-time
+ *           description: The date the user was last updated
+ */
+
 export interface IUser extends Document {
   _id: mongoose.Types.ObjectId
   email: string
   password: string
   comparePassword(candidatePassword: string): Promise<boolean>
+  createdAt: Date
+  updatedAt: Date
 }
 
 const userSchema = new Schema<IUser>(
